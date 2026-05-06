@@ -184,3 +184,16 @@ Base path: `/api`. Todas las respuestas son JSON. Errores con forma `{ "error": 
 - Los tickets no se eliminan; se archivan (`isArchived = true`).
 - No existe auto-registro. Solo un admin puede crear usuarios.
 - El único admin activo no puede ser degradado ni desactivado.
+
+---
+
+## Imagenes de preview
+
+
+<img width="1889" height="989" alt="image" src="https://github.com/user-attachments/assets/05b07674-a1d3-4542-9e63-ed11049cd15c" />
+
+<img width="1866" height="969" alt="image" src="https://github.com/user-attachments/assets/aeab00bb-647d-422e-b287-32703d82a0e1" />
+<img width="1881" height="986" alt="image" src="https://github.com/user-attachments/assets/336158bf-55b8-4e15-a9f6-c798fe4b214f" />
+<img width="1888" height="987" alt="image" src="https://github.com/user-attachments/assets/1ff7785e-84ff-4051-9891-e7216169ff33" />
+<img width="1242" height="726" alt="image" src="https://github.com/user-attachments/assets/56dab479-144d-4485-8de0-328e62fb4735" />
+<img width="1877" height="977" alt="image" src="https://github.com/user-attachments/assets/fd309b57-181d-420e-b87b-a56b8ba492dc" />
