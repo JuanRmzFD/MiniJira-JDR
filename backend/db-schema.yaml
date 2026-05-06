@@ -1,0 +1,200 @@
+# db-schema.yaml — Mini Jira
+# Fuente de verdad: src/db/schema.js (Drizzle ORM, SQLite)
+# Actualizar cada vez que se agreguen/modifiquen tablas o columnas.
+
+database:
+  dialect: sqlite
+  orm: drizzle
+  orm_version: "^0.30"
+  file: data/minijira.db
+
+tables:
+
+  ticket_states:
+    description: Catálogo de estados de ticket. Tabla en lugar de enum para permitir nuevos estados sin migrar schema.
+    columns:
+      code:
+        type: text
+        primary_key: true
+        not_null: true
+      label:
+        type: text
+        not_null: true
+      sort_order:
+        type: integer
+        not_null: true
+    seed:
+      - { code: por_hacer,   label: "Por hacer",   sort_order: 1 }
+      - { code: en_progreso, label: "En progreso", sort_order: 2 }
+      - { code: listo,       label: "Listo",        sort_order: 3 }
+
+  allowed_transitions:
+    description: Máquina de estados. Define qué transiciones están permitidas y cuáles requieren rol admin.
+    primary_key: [from_state, to_state]
+    columns:
+      from_state:
+        type: text
+        not_null: true
+        references: ticket_states.code
+      to_state:
+        type: text
+        not_null: true
+        references: ticket_states.code
+      admin_only:
+        type: integer  # boolean (0/1)
+        not_null: true
+        default: false
+    seed:
+      - { from_state: por_hacer,   to_state: en_progreso, admin_only: false }
+      - { from_state: en_progreso, to_state: listo,        admin_only: false }
+      - { from_state: listo,       to_state: en_progreso,  admin_only: true  }
+
+  users:
+    description: Usuarios del sistema. Roles admin/usuario. Sesiones gestionadas con express-session.
+    columns:
+      id:
+        type: text  # UUID v4
+        primary_key: true
+        not_null: true
+      email:
+        type: text
+        not_null: true
+        unique: true
+      display_name:
+        type: text
+        not_null: true
+      role:
+        type: text
+        not_null: true
+        default: usuario
+        enum: [admin, usuario]
+      is_active:
+        type: integer  # boolean (0/1)
+        not_null: true
+        default: true
+      password_hash:
+        type: text
+        nullable: true
+        note: Hash bcrypt. Nunca expuesto en respuestas de API.
+      created_at:
+        type: text  # ISO 8601
+        not_null: true
+      updated_at:
+        type: text  # ISO 8601
+        not_null: true
+    indexes:
+      - name: users_email_unique
+        columns: [email]
+        unique: true
+
+  tickets:
+    description: Entidad central. Estado referenciado en ticket_states. Borrado lógico via archived.
+    columns:
+      id:
+        type: text  # UUID v4
+        primary_key: true
+        not_null: true
+      title:
+        type: text
+        not_null: true
+      description:
+        type: text
+        nullable: true
+      state:
+        type: text
+        not_null: true
+        default: por_hacer
+        references: ticket_states.code
+      priority:
+        type: text
+        nullable: true
+        enum: [baja, media, alta]
+      creator_id:
+        type: text
+        not_null: true
+        references: users.id
+      assigned_to:
+        type: text
+        nullable: true
+        references: users.id
+      archived:
+        type: integer  # boolean (0/1)
+        not_null: true
+        default: false
+        note: Borrado lógico. Los tickets nunca se eliminan físicamente.
+      closed_at:
+        type: text  # ISO 8601 | null
+        nullable: true
+        note: Solo asignado cuando state='listo'. Limpiado si se revierte.
+      version:
+        type: integer
+        not_null: true
+        default: 1
+        note: Optimistic locking. El backend rechaza escrituras con versión desactualizada (409).
+      created_at:
+        type: text  # ISO 8601
+        not_null: true
+      updated_at:
+        type: text  # ISO 8601
+        not_null: true
+
+  ticket_labels:
+    description: Etiquetas de texto libre por ticket. PK compuesta. CASCADE delete con el ticket padre.
+    primary_key: [ticket_id, label]
+    columns:
+      ticket_id:
+        type: text
+        not_null: true
+        references: tickets.id
+        on_delete: cascade
+      label:
+        type: text
+        not_null: true
+
+  state_transitions:
+    description: Audit trail inmutable de cambios de estado. from_state NULL indica creación inicial del ticket.
+    columns:
+      id:
+        type: text  # UUID v4
+        primary_key: true
+        not_null: true
+      ticket_id:
+        type: text
+        not_null: true
+        references: tickets.id
+      from_state:
+        type: text
+        nullable: true
+        note: NULL en el registro de creación inicial del ticket.
+      to_state:
+        type: text
+        not_null: true
+      changed_by:
+        type: text
+        not_null: true
+        references: users.id
+      created_at:
+        type: text  # ISO 8601
+        not_null: true
+
+  comments:
+    description: Comentarios de ticket. Inmutables (sin updated_at). Soportan @menciones para notificaciones.
+    columns:
+      id:
+        type: text  # UUID v4
+        primary_key: true
+        not_null: true
+      ticket_id:
+        type: text
+        not_null: true
+        references: tickets.id
+      author_id:
+        type: text
+        not_null: true
+        references: users.id
+      content:
+        type: text
+        not_null: true
+      created_at:
+        type: text  # ISO 8601
+        not_null: true

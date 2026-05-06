@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mini Jira - Engineering Team Board</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5d5e60",
+                        "surface": "#faf8fe",
+                        "background": "#faf8fe",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#adc6ff",
+                        "on-secondary-container": "#616365",
+                        "on-secondary-fixed-variant": "#454749",
+                        "inverse-on-surface": "#f1f0f5",
+                        "secondary-container": "#dfdfe1",
+                        "surface-dim": "#dad9df",
+                        "surface-bright": "#faf8fe",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e3e2e7",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-tertiary-fixed-variant": "#7c2e00",
+                        "on-surface-variant": "#414755",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#004493",
+                        "outline": "#717786",
+                        "primary-container": "#0070eb",
+                        "inverse-surface": "#2f3034",
+                        "tertiary-fixed-dim": "#ffb595",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "primary": "#0058bc",
+                        "on-primary-container": "#fefcff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-primary-fixed": "#001a41",
+                        "surface-container": "#eeedf3",
+                        "on-background": "#1a1b1f",
+                        "surface-tint": "#005bc1",
+                        "tertiary-container": "#c64f00",
+                        "outline-variant": "#c1c6d7",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-container-highest": "#e3e2e7",
+                        "surface-container-high": "#e9e7ed",
+                        "on-surface": "#1a1b1f",
+                        "primary-fixed": "#d8e2ff",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f4f3f8",
+                        "tertiary": "#9e3d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-margin": "32px",
+                        "container-padding": "24px",
+                        "element-gap": "12px",
+                        "gutter": "16px",
+                        "base-unit": "4px",
+                        "grid-columns": "12"
+                    },
+                    "fontFamily": {
+                        "body-base": ["Inter"],
+                        "button": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-base": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                        "button": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "h2": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .apple-shadow {
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.05), 0px 10px 20px rgba(0,0,0,0.03);
+        }
+        .glass {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 gap-2 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 w-64 z-50">
+<div class="flex items-center gap-3 px-2 py-4 mb-4">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<div>
+<h2 class="text-base font-bold text-gray-900 dark:text-white leading-tight">Mini Jira</h2>
+<p class="text-[11px] text-gray-500 font-medium">Engineering Team</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-150 ease-out" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="font-sans text-[13px] font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg transition-all duration-150 ease-out" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="view_kanban">view_kanban</span>
+<span class="font-sans text-[13px] font-semibold">Board</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-150 ease-out" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="assignment">assignment</span>
+<span class="font-sans text-[13px] font-medium">Tasks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-150 ease-out" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-sans text-[13px] font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-all duration-150 ease-out" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="contact_support">contact_support</span>
+<span class="font-sans text-[13px] font-medium">Help Center</span>
+</a>
+<div class="pt-4 border-t border-gray-100 dark:border-gray-800">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white font-button text-button rounded-lg transition-transform duration-200 ease-in-out active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    New Project
+                </button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar Shell -->
+<header class="sticky top-0 z-50 flex justify-between items-center px-6 py-3 w-full bg-[#FBFBFD]/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-gray-400 text-sm" data-icon="search">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-gray-100/50 dark:bg-gray-800/50 border-none rounded-full text-body-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+<div class="h-4 w-[1px] bg-gray-300 dark:bg-gray-700"></div>
+<nav class="flex items-center gap-4">
+<a class="text-blue-600 dark:text-blue-400 font-semibold border-b-2 border-blue-600 font-sans text-sm tracking-tight py-1" href="#">Board</a>
+<a class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded px-2 py-1 font-sans text-sm" href="#">Timeline</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+<span class="material-symbols-outlined text-[22px]" data-icon="help">help</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional studio headshot of a user with a clean, neutral background, reflecting a modern workspace aesthetic. The lighting is soft and flattering, with a minimalist color palette of whites and grays. The image conveys high-end professionalism and systematic order, consistent with a premium project management interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASmqtoLK6ogVF0GdI5_Beh5B_UfsV8_zIKt21U4pBj9KSYX1lNlGTjfahfT6_Argc5TbyqSP26sNKlSURGYZlNT7ZKkYePsWmaqMqKoKXwOEM8JLltPFJM3YF1Mg2GVaRWGSjlBQNTDRBuiFTgn8wArRlHCE8d8pz8CpRbozlfax7TpyUnBlkXdd5tjGLpDN9vaGUAkkk6U5S5tSxurVZx7766BUW48QMBPsMYf4PaH-MLQmmBZoL7aGgN7EtLXT8xWZnhex7LjfQ"/>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="p-container-padding max-w-[1440px] mx-auto">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<div class="flex items-center gap-2 text-body-sm text-secondary mb-1">
+<span>Projects</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span>Mini Jira</span>
+</div>
+<h1 class="font-h1 text-h1 text-on-background">Engineering Team Kanban</h1>
+</div>
+<div class="flex items-center gap-element-gap">
+<button class="flex items-center gap-2 px-4 py-2 bg-gray-100/50 hover:bg-gray-200/50 text-on-background font-button text-button rounded-lg transition-colors border border-gray-200 dark:border-gray-800">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Export CSV
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white font-button text-button rounded-lg transition-transform duration-200 ease-in-out active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        Create Ticket
+                    </button>
+</div>
+</div>
+<!-- Filters Section -->
+<div class="flex items-center gap-4 mb-10 pb-6 border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-2">
+<span class="text-body-sm text-secondary">Assignees:</span>
+<div class="flex -space-x-2">
+<img alt="Marcos" class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 bg-gray-200" data-alt="A minimalist circular avatar icon with a soft pastel blue background and a clean white initial letter M. The visual style is focused and professional, following a high-end dashboard aesthetic with subtle depth and clean lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQJs11zcH3RcluOIab5gqdhvaQVbCeNg1x0dPwoMTzIKcw-s8JtHpuuWYt5NrtgtRAfC9pIKsf2Ohw7O-4yaYuA2I7MdRyr2z1Z4_-dJct8ttg5WzK7qJNkJ8CM0Isd9J6QtrQbtXg00XcQkAS31M-wl3zXOLDRFQ1TWCGbqW2bHvBJ7u3By2WtWLi-Ev6ONml9vndBplvYggtjC0dFPCl0X2n1vKsrc9OHGrUtLElcj-aCH8SQWOGR4lm9nJq48XhFX4SzRwlxvE"/>
+<img alt="Roberto" class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 bg-gray-200" data-alt="A professional circular user avatar with a soft sage green background and a crisp white letter R. The lighting is balanced and modern, fitting perfectly into a clean and systematic project management UI environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVja2LRwJGJMLHa-iRfX01Gqy8uu1HLh86QKBw2QtcqJOcGQauqMEwmZgI3s2g6PulZ1dRUEw4qBq7OI2qlQCMEFesRMsktxDYJmM-tzpcnGohPGCAN7q6w1_SOzayBX7P6Q8ufUrhZYEtIoTe6BmRL2Kw-sBu1cCKzJxL-EDMfJviAxKYmj1sLnwvo5QdqWwkNiQRuGRD3uyu6sve1eAVpmzI-jzOzBJpo_MZFrRMgWtjlYmnyqRl5Zq-eCnKlE69RbxBatFvO98"/>
+<div class="w-7 h-7 rounded-full border-2 border-white dark:border-gray-900 bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-500">+4</div>
+</div>
+</div>
+<div class="h-4 w-[1px] bg-gray-200"></div>
+<div class="flex items-center gap-2">
+<span class="text-body-sm text-secondary">Priority:</span>
+<button class="flex items-center gap-1.5 px-2.5 py-1 text-body-sm bg-white border border-gray-200 rounded-md hover:bg-gray-50">
+                        All
+                        <span class="material-symbols-outlined text-[14px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-body-sm text-secondary">Tags:</span>
+<button class="flex items-center gap-1.5 px-2.5 py-1 text-body-sm bg-white border border-gray-200 rounded-md hover:bg-gray-50">
+                        Filter by Tag
+                        <span class="material-symbols-outlined text-[14px]" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<button class="ml-auto text-body-sm text-primary font-medium hover:underline">Clear all filters</button>
+</div>
+<!-- Kanban Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Column: To Do -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<h3 class="font-h2 text-[14px] font-bold text-on-background uppercase tracking-wider">To Do</h3>
+<span class="bg-gray-200 text-gray-600 text-[11px] px-1.5 py-0.5 rounded-full font-bold">1</span>
+</div>
+<button class="text-gray-400 hover:text-on-background transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Ticket 1 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 apple-shadow border border-gray-100 dark:border-gray-800 hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700">High Priority</span>
+<span class="material-symbols-outlined text-gray-300 group-hover:text-gray-400" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<h4 class="font-body-base text-on-background font-semibold mb-2">D-01 Decision: Ticket Visibility</h4>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[11px] font-medium border border-blue-100">Backend</span>
+</div>
+<div class="flex justify-between items-center pt-3 border-t border-gray-50 dark:border-gray-800">
+<div class="flex items-center gap-2 text-gray-400">
+<span class="material-symbols-outlined text-[16px]" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[11px]">3</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center border border-dashed border-gray-300">
+<span class="material-symbols-outlined text-[14px] text-gray-400" data-icon="person_add">person_add</span>
+</div>
+</div>
+</div>
+<button class="w-full py-3 flex items-center justify-center gap-2 text-gray-400 hover:text-primary hover:bg-white rounded-xl border border-dashed border-gray-200 hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span class="text-body-sm font-medium">Add task</span>
+</button>
+</div>
+</div>
+<!-- Column: In Progress -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<h3 class="font-h2 text-[14px] font-bold text-on-background uppercase tracking-wider">In Progress</h3>
+<span class="bg-primary-container text-white text-[11px] px-1.5 py-0.5 rounded-full font-bold">1</span>
+</div>
+<button class="text-gray-400 hover:text-on-background transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Ticket 2 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 apple-shadow border border-gray-100 dark:border-gray-800 hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">Medium Priority</span>
+<span class="material-symbols-outlined text-gray-300 group-hover:text-gray-400" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<h4 class="font-body-base text-on-background font-semibold mb-2">Setup PostgreSQL Schema</h4>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 text-[11px] font-medium border border-purple-100">Infra</span>
+</div>
+<div class="flex justify-between items-center pt-3 border-t border-gray-50 dark:border-gray-800">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined text-[16px]" data-icon="attachment">attachment</span>
+<span class="text-[11px]">2</span>
+</div>
+<div class="flex items-center gap-1 text-gray-400">
+<span class="material-symbols-outlined text-[16px]" data-icon="task_alt">task_alt</span>
+<span class="text-[11px]">4/10</span>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full overflow-hidden border border-white">
+<img alt="Marcos" class="w-full h-full object-cover" data-alt="A clean, minimalist circular avatar for a user named Marcos. The avatar features a bright white letter M centered against a soft, professionally lit background in a muted blue tone, consistent with the corporate Jira-style interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPnjoLt9jangAQgjlVxhOBYVEP-whblZSjOWc-RXiOjzSfEgcci6LNwb5MnVGZqzQd7HXwuIlLR96DiAUL--TXZ5Ml_kfypMCuWgYZJ1F_nuDkiSyVUcvu8hQvB1cTygpWRyqPxBgFZYbSCORJ_pNCErRqrFcjXx_k8PH2EGgoHbDAjNlmfn9eSxe8W1D1OEPA9Umxj6KLoJwbQeOmErFaEswhqqO0XmuMD3B2F0WAUIoPbu3hm3tR30kbYbE3ITiMN2VpgIjQ6Q8"/>
+</div>
+</div>
+</div>
+<button class="w-full py-3 flex items-center justify-center gap-2 text-gray-400 hover:text-primary hover:bg-white rounded-xl border border-dashed border-gray-200 hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span class="text-body-sm font-medium">Add task</span>
+</button>
+</div>
+</div>
+<!-- Column: Done -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<h3 class="font-h2 text-[14px] font-bold text-on-background uppercase tracking-wider">Done</h3>
+<span class="bg-emerald-500 text-white text-[11px] px-1.5 py-0.5 rounded-full font-bold">1</span>
+</div>
+<button class="text-gray-400 hover:text-on-background transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Ticket 3 -->
+<div class="bg-white/60 dark:bg-gray-900/60 rounded-xl p-4 apple-shadow border border-gray-100 dark:border-gray-800 hover:border-emerald-500/30 transition-all cursor-pointer group grayscale-[0.3]">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">Low Priority</span>
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h4 class="font-body-base text-gray-500 line-through font-semibold mb-2">Draft v0.2 PRD</h4>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 text-[11px] font-medium border border-gray-200">Docs</span>
+</div>
+<div class="flex justify-between items-center pt-3 border-t border-gray-50 dark:border-gray-800">
+<div class="flex items-center gap-2 text-emerald-600">
+<span class="text-[11px] font-semibold">Completed yesterday</span>
+</div>
+<div class="w-6 h-6 rounded-full overflow-hidden border border-white">
+<img alt="Roberto" class="w-full h-full object-cover" data-alt="A professional circular profile icon for a team member named Roberto. The avatar uses a high-contrast design with a white letter R against a vibrant yet soft green background, symbolizing project completion and positive progress in a minimalist UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0LT0Uopa-aznw963lZAmME0PGFSPVDpVm2-HMlGLGx4B7Lez9Ca5SrdhyAJrIxU_B1t1wSPoYJztouHvqNRPAcRAaQjNDcTuxdE433FBPXIKASPs9iuHvRJE6joEhP9Ng3EFZ2tN4FqxWllOSNz21KRJAJg9Jv4bkrGboqTiULgsGfuRq1cDpW434c9zJ7wtbITLsNKLsV5SAr8_-URZFlQRpcvaYOtfPaUiCQ_tZDBj3QTYkazKfbtUXtGZLS60hhfbP7AzaYWw"/>
+</div>
+</div>
+</div>
+<button class="w-full py-3 flex items-center justify-center gap-2 text-gray-400 hover:text-primary hover:bg-white rounded-xl border border-dashed border-gray-200 hover:border-primary transition-all group">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span class="text-body-sm font-medium">Add task</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
